@@ -1,0 +1,9 @@
+name = "santa-api"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "something-db"
+database_id = "b39f3f1d-691e-46b1-a253-02822289f31b"
