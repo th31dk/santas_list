@@ -3,13 +3,11 @@ import { addName, listNames, removeName, markFulfilled } from "./db/queries"
 
 const app = new Hono()
 
-app.get("/api/names", async (c) => {
-  const db = c.env.DB
-  return c.json(listNames(db))
-})
+app.get("/", (c) => c.text("🎄 Santa's List API 🎄"))
+
+app.get("/api/names", (c) => c.json(listNames()))
 
 app.post("/api/names", async (c) => {
-  const db = c.env.DB
   const body = await c.req.json().catch(() => null)
   const name = (body?.name ?? "").toString().trim()
   const gift = (body?.gift ?? "").toString().trim()
@@ -19,26 +17,24 @@ app.post("/api/names", async (c) => {
     return c.json({ error: "name, gift, and naughtyornice are required" }, 400)
   }
 
-  return c.json(addName(db, name, gift, naughtyornice), 201)
+  return c.json(addName(name, gift, naughtyornice), 201)
 })
 
-app.patch("/api/names/:id/fulfill", async (c) => {
-  const db = c.env.DB
+app.patch("/api/names/:id/fulfill", (c) => {
   const id = Number(c.req.param("id"))
   if (!Number.isFinite(id)) return c.json({ error: "bad id" }, 400)
 
-  const res = markFulfilled(db, id)
+  const res = markFulfilled(id)
   if (res.changes === 0) return c.json({ error: "not found" }, 404)
 
   return c.json({ ok: true })
 })
 
-app.delete("/api/names/:id", async (c) => {
-  const db = c.env.DB
+app.delete("/api/names/:id", (c) => {
   const id = Number(c.req.param("id"))
   if (!Number.isFinite(id)) return c.json({ error: "bad id" }, 400)
 
-  const res = removeName(db, id)
+  const res = removeName(id)
   if (res.changes === 0) return c.json({ error: "not found" }, 404)
 
   return c.json({ ok: true })

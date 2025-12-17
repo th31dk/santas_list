@@ -8,7 +8,6 @@ export function listNames() {
 
 export function addName(name: string, gift: string, naughtyornice: string) {
   const createdAt = Math.floor(Date.now() / 1000)
-
   const res = db.insert(santaList).values({
     name,
     gift,
@@ -16,7 +15,6 @@ export function addName(name: string, gift: string, naughtyornice: string) {
     fulfilled: 0,
     createdAt,
   }).run()
-
   return { id: Number(res.lastInsertRowid) }
 }
 
@@ -25,7 +23,6 @@ export function markFulfilled(id: number) {
     .set({ fulfilled: 1 })
     .where(eq(santaList.id, id))
     .run()
-
   return { changes: res.changes }
 }
 
